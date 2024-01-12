@@ -37,6 +37,11 @@ class qtype_coderunner_testcase extends advanced_testcase {
 
     protected $hasfailed = false; // Set to true when a test fails.
 
+    /**
+     * The category in which to create questions.
+     */
+    public $category;
+
     protected function setUp(): void {
         parent::setUp();
         self::setup_test_sandbox_configuration();

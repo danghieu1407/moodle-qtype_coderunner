@@ -33,6 +33,20 @@ use qtype_coderunner\constants;
 
 
 class qtype_coderunner_renderer extends qtype_renderer {
+    /**
+     * HTML output.
+     */
+    public $got_html;
+
+    /**
+     * Expected HTML output.
+     */
+    public $expected_html;
+
+    /**
+     * The fraction.
+     */
+    public $fraction;
 
     /**
      * Generate the display of the formulation part of the question. This is the

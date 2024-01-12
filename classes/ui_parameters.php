@@ -29,6 +29,31 @@ defined('MOODLE_INTERNAL') || die();
 
 // A class to represent a single parameter with a name, type and value.
 class qtype_coderunner_ui_parameter {
+    /**
+     * The name of the parameter.
+     */
+    public $name;
+
+    /**
+     * The type of the parameter, e.g. 'int', 'float', 'string', 'bool', 'list'.
+     */
+    public $type;
+
+    /**
+     * The value of the parameter.
+     */
+    public $value;
+
+    /**
+     * Whether the parameter is required.
+     */
+    public $required;
+
+    /**
+     * Whether the parameter has been updated since the initial load.
+     */
+    public $updated;
+
     public function __construct($name, $type, $value, $required=false) {
         $this->name = $name;
         $this->type = $type;
@@ -51,6 +76,17 @@ class qtype_coderunner_ui_parameters {
      * locate the JSON file that specifies the type and default value, e.g.
      * ui_graph.json.
      */
+
+    /**
+     * The name of the ui plugin, e.g. ace, graph, etc.
+     */
+    public $uiname;
+
+    /**
+     * An associative array of parameter name => qtype_coderunner_ui_parameter.
+     */
+    public $params;
+
     public function __construct(string $uiname) {
         global $CFG;
         $filename = $CFG->dirroot . "/question/type/coderunner/amd/src/ui_{$uiname}.json";

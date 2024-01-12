@@ -24,6 +24,12 @@
 
 class qtype_coderunner_html_wrapper {
 
+    /**
+     * The wrapped html.
+     */
+    public $html;
+
+
     public function __construct($html) {
         $this->html = $html;
     }

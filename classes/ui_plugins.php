@@ -29,6 +29,21 @@ class qtype_coderunner_ui_plugins {
     private static $instance = null;
 
     /**
+     * The plugins.
+     */
+    public $plugins;
+
+    /**
+     * The name of the ui plugin, e.g. ace, graph, etc.
+     */
+    public $uiname;
+
+    /**
+     * The parameters for this plugin.
+     */
+    public $params;
+
+    /**
      * Construct a ui_plugins object by reading amd/src directory to identify
      * all available plugins and their specifications (if available).
      * uinames are internally lower-case and filenames should be lower-case
@@ -114,6 +129,16 @@ class qtype_coderunner_ui_plugins {
 // A class to represent a single plugin. The uiname is the lower case
 // plugin name, e.g. 'ace', 'graph'.
 class qtype_coderunner_ui_plugin {
+
+    /**
+     * The name of the ui plugin, e.g. ace, graph, etc.
+     */
+    public $uiname;
+
+    /**
+     * The parameters for this plugin.
+     */
+    public $params;
 
     /**
      *

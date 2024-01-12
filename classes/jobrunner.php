@@ -36,6 +36,26 @@ class qtype_coderunner_jobrunner {
     private $testcases = null;       // The testcases (a subset of those in the question).
     private $allruns = null;         // Array of the source code for all runs.
 
+    /**
+     * Whether the question is precheck.
+     */
+    private $isprecheck;
+
+    /**
+     * The parameters to be passed to the sandbox.
+     */
+    private $sandboxparams;
+
+    /**
+     * The language to be used for the sandbox.
+     */
+    private $language;
+
+    /**
+     * The template parameters to be passed to the sandbox.
+     */
+    private $templateparams;
+
     // Check the correctness of a student's code and possible extra attachments
     // as an answer to the given
     // question and and a given set of test cases (which may be empty or a

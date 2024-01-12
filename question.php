@@ -37,7 +37,555 @@ use qtype_coderunner\coderunner_files;
  */
 class qtype_coderunner_question extends question_graded_automatically {
 
-    public $testcases = null; // Array of testcases.
+    /**
+     * Prototype name.
+     */
+    public $coderunnertype;
+
+    /**
+     * Prototype type.
+     */
+    public $prototypetype;
+
+    /**
+     * All-or-nothing grading.
+     */
+    public $allornothing;
+
+    /**
+     * Penalty regime.
+     */
+    public $penaltyregime;
+
+    /**
+     * Precheck for the question.
+     */
+    public $precheck;
+
+    /**
+     * Hide check.
+     */
+    public $hidecheck;
+
+    /**
+     * Show source. Template debugging.
+     */
+    public $showsource;
+
+    /**
+     * The number of rows to allocate for the answer box.
+     */
+    public $answerboxlines = '';
+
+    /**
+     * Answer box columns.
+     */
+    public $answerboxcolumns = '';
+
+    /**
+     * Text supplied here will be preloaded into the student's answer box.
+     */
+    public $answerpreload;
+
+    /**
+     * A field of text for general-purpose use by template authors.
+     * Like the extra field of each test case, but global to all tests.
+     */
+    public $globalextra;
+
+    /**
+     * The template uses ace.
+     */
+    public $useace;
+
+    /**
+     * By default, the result table displays the testcode, stdin, expected and got
+     * columns, provided the columns are not empty. You can change the default, and/or
+     * the column headers by entering a value for the resultcolumns (leave blank for
+     * the default behaviour).
+     */
+    public $resultcolumns;
+
+    /**
+     * The template parameters.
+     */
+    public $template;
+
+    /**
+     * Checking the combinator template.
+     */
+    public $iscombinatortemplate;
+
+    /**
+     * Allow multiple stdins.
+     */
+    public $allowmultiplestdins;
+
+    /**
+     * The answer of the question.
+     */
+    public $answer;
+
+    /**
+     * Validate on save.
+     */
+    public $validateonsave = '';
+
+    /**
+     * Test splitter (regex).
+     */
+    public $testsplitterre;
+
+    /**
+     * The language of the question.
+     */
+    public $language;
+
+    /**
+     * The ace language.
+     */
+    public $acelang;
+
+    /**
+     * The sandbox of the question.
+     */
+    public $sandbox;
+
+    /**
+     * The grader template of the question.
+     */
+    public $grader;
+
+    /**
+     * Cpu time limit secs.
+     */
+    public $cputimelimitsecs;
+
+    /**
+     * Memory limit mb.
+     */
+    public $memlimitmb;
+
+    /**
+     * Sandbox parameters of the question.
+     */
+    public $sandboxparams;
+
+    /**
+     * The template parameters.
+     */
+    public $templateparams;
+
+    /**
+     * The hoist template parameters.
+     */
+    public $hoisttemplateparams;
+
+    /**
+     * The extract code from json.
+     */
+    public $extractcodefromjson;
+
+    /**
+     * The template parameters lang.
+     */
+    public $templateparamslang;
+
+    /**
+     * The template parameters eval per try.
+     */
+    public $templateparamsevalpertry;
+
+    /**
+     * The template parameters evald.
+     */
+    public $templateparamsevald;
+
+    /**
+     * Template parameters were traditionally referred to during Twig expansion in the form
+     * {{QUESTION.parameters.someparam}} However, if the Hoist Template Parameters
+     * checkbox is checked, the parameters are hoisted into the Twig global name space
+     * and can be referenced simply as {{someparam}}.
+     */
+    public $twigall;
+
+    /**
+     * The ui plugin.
+     */
+    public $uiplugin;
+
+    /**
+     * The uiparameters.
+     */
+    public $uiparameters;
+
+    /**
+     * The attachments of the question.
+     */
+    public $attachments;
+
+    /**
+     * The attachments required.
+     */
+    public $attachmentsrequired;
+
+    /**
+     * Max allowed file size (bytes).
+     */
+    public $maxfilesize;
+
+    /**
+     * Allowed file names (regular expression).
+     */
+    public $filenamesregex;
+
+    /**
+     * Description of file name.
+     */
+    public $filenamesexplain;
+
+    /**
+     * Set to 0 or 1, feedback (result table) is shown.
+     * Not if display feedback is set to 2.
+     */
+    public $displayfeedback;
+
+    /**
+     * The give up allowed.
+     */
+    public $giveupallowed;
+
+    /**
+     * A field of text for general-purpose use by question type authors,
+     * like global extra, but part of the prototype state.
+     */
+    public $prototypeextra;
+
+    /**
+     * The answers of the question.
+     */
+    public $answers;
+
+    /**
+     * The customise field of the question.
+     * The customise field isn't listed as an extra-question-field.
+     */
+    public $customise;
+
+    /**
+     * The test cases of the question.
+     */
+    public $testcases;
+
+    /**
+     * The student attribute of the question.
+     */
+    public $student;
+
+    /**
+     * The prototype attribute of the question.
+     */
+    public $prototype;
+
+    /**
+     * The initialisation error message.
+     */
+    public $initialisationerrormessage;
+
+    /**
+     * The parameters.
+     */
+    public $parameters;
+
+    /**
+     * The template parameters json.
+     */
+    public $templateparamsjson;
+
+    /**
+     * The cached function params.
+     */
+    public $cachedfuncparams;
+
+    /**
+     * The cached evald template params. Use previously cached result if possible.
+     */
+    public $cachedevaldtemplateparams;
+
+    /**
+     * The merged ui parameters. Just as the parameters field.
+     */
+    public $mergeduiparameters;
+
+    /**
+     * The options of the question.
+     */
+    public $options;
+
+    /**
+     * Whether the question is new.
+     */
+    public $isnew;
+
+    /**
+     * The context of the question.
+     */
+    public $context;
+
+    /**
+     * The question id.
+     */
+    public $questionid;
+
+    /**
+     * The step info of the question.
+     */
+    public $stepinfo;
+
+    /**
+     * Whether the question is precheck.
+     */
+    public $isprecheck;
+
+    /**
+     * The test type.
+     */
+    public $testtype;
+
+    /**
+     * The test code.
+     */
+    public $testcode;
+
+    /**
+     * The test stdin.
+     */
+    public $stdin;
+
+    /**
+     * The test extra.
+     */
+    public $extra;
+
+    /**
+     * The test expected.
+     */
+    public $expected;
+
+    /**
+     * The display.
+     */
+    public $display;
+
+    /**
+     * The mark of the test.
+     */
+    public $mark;
+
+    /**
+     * The hide test case if fail.
+     */
+    public $hiderestiffail;
+
+    /**
+     * The use as example.
+     */
+    public $useasexample;
+
+    /**
+     * The question category id.
+     */
+    public $questioncategoryid;
+
+    /**
+     * The question category object.
+     */
+    public $categoryobject;
+
+    /**
+     * The course tag objects.
+     */
+    public $coursetagobjects;
+
+    /**
+     * The course tags.
+     */
+    public $coursetags;
+
+    /**
+     * The tag objects.
+     */
+    public $tagobjects;
+
+    /**
+     * The tags.
+     */
+    public $tags;
+
+    /**
+     * The form options.
+     */
+    public $formoptions;
+
+    /**
+     * The being copied.
+     */
+    public $beingcopied;
+
+    /**
+     * The scroll into view.
+     */
+    public $mdlscrollto;
+
+    /**
+     * The category move to.
+     */
+    public $categorymoveto;
+
+    /**
+     * The append qnum string.
+     */
+    public $appendqnumstring;
+
+    /**
+     * The return url.
+     */
+    public $returnurl;
+
+    /**
+     * The make copy.
+     */
+    public $makecopy;
+
+    /**
+     * The course id.
+     */
+    public $courseid;
+
+    /**
+     * Whether the question is in popup.
+     */
+    public $inpopup;
+
+    /**
+     * The support file manager draft id.
+     */
+    public $supportfilemanagerdraftid;
+
+    /**
+     * Bad question load.
+     */
+    public $badquestionload;
+
+    /**
+     * Broken question message.
+     */
+    public $brokenquestionmessage;
+
+    /**
+     * Mform is expanded id customisationheader.
+     */
+    public $mform_isexpanded_id_customisationheader;
+
+    /**
+     * Type name of the question.
+     */
+    public $typename;
+
+    /**
+     * The saved prototype type.
+     */
+    public $saved_prototype_type;
+
+    /**
+     * Mform is expanded id answerhdr.
+     */
+    public $mform_isexpanded_id_answerhdr;
+
+    /**
+     * Sample answer attachments.
+     */
+    public $sampleanswerattachments;
+
+    /**
+     * Mform is expanded id answerpreloadhdr.
+     */
+    public $mform_isexpanded_id_answerpreloadhdr;
+
+    /**
+     * Mform is expanded id globalextrahdr.
+     */
+    public $mform_isexpanded_id_globalextrahdr;
+
+    /**
+     * Mform is expanded id templatehdr.
+     */
+    public $mform_isexpanded_id_testcasehdr;
+
+    /**
+     * Num test cases.
+     */
+    public $numtestcases;
+
+    /**
+     * Data files.
+     */
+    public $datafiles;
+
+    /**
+     * Mform is expanded id attachmentoptions.
+     */
+    public $mform_isexpanded_id_attachmentoptions;
+
+    /**
+     * The cmid.
+     */
+    public $cmid;
+
+    /**
+     * The update button.
+     */
+    public $updatebutton;
+
+    /**
+     * The sesskey.
+     */
+    public $sesskey;
+
+    /**
+     * The qtype coderunner edit form.
+     */
+    public $_qf__qtype_coderunner_edit_form;
+
+    /**
+     * The form question.
+     */
+    public $formquestion;
+
+    /**
+     * The submit button.
+     */
+    public $submitbutton;
+
+    /**
+     * The current category.
+     */
+    public $usecurrentcat;
+
+    /**
+     * The old parent.
+     */
+    public $oldparent;
+
+    /**
+     * The question text files.
+     */
+    public $questiontextfiles;
+
+    /**
+     * The general feedback files.
+     */
+    public $generalfeedbackfiles;
 
     /**
      * Start a new attempt at this question, storing any information that will

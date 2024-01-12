@@ -43,6 +43,26 @@ class qtype_coderunner_edit_form extends question_edit_form {
     const UI_PARAM_ROWS = 5;  // The number of rows of the template parameter field.
     const RESULT_COLUMNS_SIZE = 80; // The size of the resultcolumns field.
 
+    /**
+     * The language of the question.
+     */
+    public $lang;
+
+    /**
+     * The language of the ace editor.
+     */
+    public $acelang;
+
+    /**
+     * The cached ui params json.
+     */
+    public $cacheduiparamsjson;
+
+    /**
+     * The form question.
+     */
+    public $formquestion;
+
     public function qtype() {
         return 'coderunner';
     }

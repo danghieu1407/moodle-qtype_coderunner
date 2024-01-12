@@ -26,6 +26,57 @@ use qtype_coderunner\constants;
 
 class qtype_coderunner_combinator_grader_outcome extends qtype_coderunner_testing_outcome {
 
+    /**
+     * The fraction.
+     */
+    public $fraction;
+
+    /**
+     * The epilogue html.
+     */
+    public $epiloguehtml;
+
+    /**
+     * The prologue html.
+     */
+    public $prologuehtml;
+
+    /**
+     * The test results.
+     */
+    public $testresults;
+
+    /**
+     * The column formats.
+     */
+    public $columnformats;
+
+    /**
+     * The instructor html.
+     */
+    public $instructorhtml;
+
+    /**
+     * Whether show differences.
+     */
+    public $showdifferences;
+
+    /**
+     * Whether show output only.
+     */
+    public $showoutputonly;
+
+    /**
+     * The grader state.
+     */
+    public $graderstate;
+
+    /**
+     * The feedback html.
+     */
+    public $feedbackhtml;
+
+
     // A list of the allowed attributes in the combinator template grader return value.
     public $allowedfields = ['fraction', 'prologuehtml', 'testresults', 'epiloguehtml',
                     'feedbackhtml', 'columnformats', 'showdifferences',

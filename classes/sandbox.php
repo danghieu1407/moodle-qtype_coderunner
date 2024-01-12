@@ -88,7 +88,10 @@ abstract class qtype_coderunner_sandbox {
 
     protected $params = null;       // Associative array of run params.
 
-
+    /**
+     * The password to use when authenticating with the sandbox.
+     */
+    protected $pass;
 
     public function __construct($user=null, $pass=null) {
         $this->user = $user;

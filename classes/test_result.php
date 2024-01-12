@@ -27,6 +27,71 @@
 
 class qtype_coderunner_test_result {
 
+    /**
+     * Whether the test case is incorrect.
+     */
+    public $iscorrect;
+
+    /**
+     * The awarded mark.
+     */
+    public $awarded;
+
+    /**
+     * The got mark.
+     */
+    public $got;
+
+    /**
+     * The test type.
+     */
+    public $testtype;
+
+    /**
+     * The test code.
+     */
+    public $testcode;
+
+    /**
+     * The test stdin.
+     */
+    public $stdin;
+
+    /**
+     * The test extra.
+     */
+    public $extra;
+
+    /**
+     * The test expected.
+     */
+    public $expected;
+
+    /**
+     * The display.
+     */
+    public $display;
+
+    /**
+     * The mark of the test.
+     */
+    public $mark;
+
+    /**
+     * The hide test case if fail.
+     */
+    public $hiderestiffail;
+
+    /**
+     * The use as example.
+     */
+    public $useasexample;
+
+    /**
+     * The type of the test.
+     */
+    public $type;
+
     public function __construct($testcase, $iscorrect, $awardedmark, $got) {
         // Flatten testcase into this, tidying up text fields.
         foreach (get_object_vars($testcase) as $key => $value) {
