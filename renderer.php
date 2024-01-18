@@ -45,7 +45,7 @@ class qtype_coderunner_renderer extends qtype_renderer {
      * @return string HTML fragment.
      */
     public function formulation_and_controls(question_attempt $qa, question_display_options $options) {
-        global $USER;
+        global $USER, $OUTPUT;
 
         $question = $qa->get_question();
         $qid = $question->id;
@@ -127,7 +127,10 @@ class qtype_coderunner_renderer extends qtype_renderer {
         $taattributes = $this->answerbox_attributes($responsefieldname, $rows,
                 $question, $currentlanguage, $options->readonly);
 
+        // Add the position-relative div to allow the styling of the fullscreen button.
+        $qtext .= html_writer::start_div('position-relative');
         $qtext .= html_writer::tag('textarea', s($currentanswer), $taattributes);
+        $qtext .= html_writer::end_div();
 
         if ($qa->get_state() == question_state::$invalid) {
             $qtext .= html_writer::nonempty_tag('div',
@@ -164,6 +167,18 @@ class qtype_coderunner_renderer extends qtype_renderer {
         } else {
             $this->page->requires->js_call_amd('qtype_coderunner/textareas', 'initQuestionTA',
                     [$responsefieldid]);
+        }
+
+        // Specific to Ace editor: add a button to toggle full screen mode.
+        // If there are additional uiplugin, add them here.
+        if(!$options->readonly && ($uiplugin === 'ace' || $uiplugin === 'ace_gapfiller')){
+            $this->page->requires->js_call_amd('qtype_coderunner/fullscreen', 'init', [
+                $qa->get_outer_question_div_unique_id(),
+                $responsefieldid,
+                $uiplugin,
+            ]);
+            // Render template for the fullscreen and exit fullscreen buttons.
+            $qtext .= $OUTPUT->render_from_template('qtype_coderunner/screenmode_button', $options->context);
         }
 
         return $qtext;
