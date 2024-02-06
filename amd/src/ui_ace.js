@@ -344,6 +344,10 @@ define(['jquery'], function($) {
         this.editor.resize();
     };
 
+    AceWrapper.prototype.allowFullScreen = function() {
+        return true;
+    }
+
      return {
         Constructor: AceWrapper
     };

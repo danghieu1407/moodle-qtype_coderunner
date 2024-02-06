@@ -115,7 +115,7 @@
  */
 
 
-define(['jquery'], function($) {
+define(['jquery', 'core/templates'], function($, Templates) {
     /**
      * Constructor for a new user interface.
      * @param {string} uiname The name of the interface element (e.g. ace, graph, etc)
@@ -133,7 +133,7 @@ define(['jquery'], function($) {
      * data attribute contains an entry for 'current-ui-wrapper' that is
      * a reference to the wrapper ('this').
      */
-    function InterfaceWrapper(uiname, textareaId) {
+    function InterfaceWrapper(uiname, textareaId, allowFullScreen) {
         let t = this; // For use by embedded functions.
 
         this.GUTTER = 14;  // Size of gutter at base of wrapper Node (pixels)
@@ -167,12 +167,11 @@ define(['jquery'], function($) {
             rows = Math.min(content_lines, MAX_GROWN_ROWS);
         }
         h = Math.max(h, rows * PIXELS_PER_ROW, MIN_WRAPPER_HEIGHT);
-
         /**
          * Construct an empty hidden wrapper div, inserted directly after the
          * textArea, ready to contain the actual UI.
          */
-        this.wrapperNode = $("<div id='" + this.taId + "_wrapper' class='ui_wrapper'></div>");
+        this.wrapperNode = $("<div id='" + this.taId + "_wrapper' class='ui_wrapper position-relative'></div>");
         this.textArea.after(this.wrapperNode);
         this.wrapperNode.hide();
         this.wrapperNode.css({
@@ -194,7 +193,7 @@ define(['jquery'], function($) {
          * Load the UI into the wrapper (aysnchronous).
          */
         this.uiInstance = null;  // Defined by loadUi asynchronously
-        this.loadUi(uiname, this.uiParams);  // Load the required UI element
+        this.loadUi(uiname, this.uiParams, allowFullScreen);  // Load the required UI element
 
         /**
          * Add event handlers
@@ -233,7 +232,7 @@ define(['jquery'], function($) {
      * @param {object} params The UI parameters object that passes parameters
      * to the actual UI object.
      */
-    InterfaceWrapper.prototype.loadUi = function(uiname, params) {
+    InterfaceWrapper.prototype.loadUi = function(uiname, params, allowFullScreen) {
         const t = this,
             errPart1 = 'Failed to load ',
             errPart2 = ' UI component. If this error persists, please report it to the forum on coderunner.org.nz';
@@ -301,6 +300,7 @@ define(['jquery'], function($) {
                     const h = t.wrapperNode.innerHeight() - t.GUTTER;
                     const w = t.wrapperNode.innerWidth();
                     const uiInstance = new ui.Constructor(t.taId, w, h, params);
+                    allowFullScreen = params.allowFullScreen;
                     if (uiInstance.failed()) {
                         /*
                          * Constructor failed to load serialisation.
@@ -324,20 +324,74 @@ define(['jquery'], function($) {
                         t.uiInstance = uiInstance;
                         t.loadFailed = false;
                         t.checkForResize();
-
                         /*
                          * Set a default syncIntervalSecs method if uiInstance lacks one.
                          */
                         let uiInstancePrototype = Object.getPrototypeOf(uiInstance);
                         uiInstancePrototype.syncIntervalSecs = uiInstancePrototype.syncIntervalSecs || syncIntervalSecsBase;
                         t.startSyncTimer(uiInstance);
+                        let canDoFullScreen = uiInstance.allowFullScreen?.() ?? false;
+                        if (canDoFullScreen) {
+                            t.initFullScreenToggele(t.taId);
+                        }
                     }
                     t.isLoading = false;
                 });
         }
     };
 
+    InterfaceWrapper.prototype.initFullScreenToggele = function(fieldId) {
+        const questionDiv = document.getElementById(fieldId);
+        const questionDivParent = questionDiv.parentElement;
+        const wrapperEditor = document.getElementById(`${fieldId}_wrapper`);
+        const wrapperEditorParent = wrapperEditor.parentElement;
+        let fullScreenButton;
+        let exitFullscreenButton;
 
+        Templates.renderForPromise('qtype_coderunner/screenmode_button', {}).then(({html}) => {
+            const screenModeButton = Templates.appendNodeContents(wrapperEditor, html, '')[0];
+
+            fullScreenButton = screenModeButton.querySelector('.button-fullscreen');
+            exitFullscreenButton = screenModeButton.querySelector('.button-exit-fullscreen');
+
+            // When load successfully, show the screen mode element and the fullscreen button.
+            fullScreenButton.classList.remove('d-none');
+            wrapperEditor.append(fullScreenButton);
+
+            fullScreenButton.addEventListener('click', enterFullscreen.bind(this));
+            exitFullscreenButton.addEventListener('click', exitFullscreen.bind(this));
+        });
+
+
+
+
+
+        function enterFullscreen(e) {
+            e.preventDefault();
+            fullScreenButton.classList.add('d-none');
+            // Append exit fullscreen button to the wrapper editor.
+            // So that when in the fullscreen mode, the exit fullscreen button will be in the wrapper editor.
+            // Handle fullscreen event.
+            wrapperEditor.addEventListener('fullscreenchange', () => {
+                // When exit fullscreen.
+                if (document.fullscreenElement === null) {
+                    exitFullscreenButton.classList.add('d-none');
+                    fullScreenButton.classList.remove('d-none');
+                } else {
+                    exitFullscreenButton.classList.remove('d-none');
+                }
+            });
+            wrapperEditor.requestFullscreen();
+        }
+
+        function exitFullscreen(e) {
+            e.preventDefault();
+            document.exitFullscreen();
+            this.uiInstance.resize();
+        }
+
+
+    };
     /**
      * Start a sync timer on the given uiInstance, unless its time interval is 0.
      * @param {object} uiInstance The instance of the user interface object whose
@@ -365,7 +419,6 @@ define(['jquery'], function($) {
             clearTimeout(uiInstance.timer);
         }
     };
-
 
     InterfaceWrapper.prototype.stop = function() {
         /*
@@ -428,9 +481,9 @@ define(['jquery'], function($) {
      * @param {string} uiname The name of the User Interface to use e.g. 'ace'
      * @param {string} textareaId The ID of the textarea to be wrapped.
      */
-    function newUiWrapper(uiname, textareaId) {
+    function newUiWrapper(uiname, textareaId, allowFullScreen = null) {
         if (uiname) {
-            return new InterfaceWrapper(uiname, textareaId);
+            return new InterfaceWrapper(uiname, textareaId, allowFullScreen);
         } else {
             return null;
         }
